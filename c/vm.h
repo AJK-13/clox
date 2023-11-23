@@ -10,7 +10,7 @@ typedef struct {
   Chunk* chunk;
   uint8_t* ip;
   Value stack[STACK_MAX];
-  Value* stackTop;
+  Value* stackTop; // Similar to ip, it points just past the element                              containing the top value on the stack.
 } VM;
 
 typedef enum {

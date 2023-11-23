@@ -52,7 +52,7 @@ static void errorAt(Token* token, const char* message) {
   } else if (token->type == TOKEN_ERROR) {
     // Nothing.
   } else {
-    fprintf(stderr, " at '%.*s'". token->length, token->start);
+    fprintf(stderr, " at '%.*s'", token->length, token->start);
   }
 
   fprintf(stderr, ": %s\n", message);
@@ -125,7 +125,7 @@ static void parsePrecedence(Precedence precedence);
 static void binary() {
   TokenType operatorType = parser.previous.type;
   ParseRule* rule = getRule(operatorType);
-  parserPrecedence((Precedence)(rule->precedence + 1));
+  // parsePrecedence((Precedence)(rule->precedence + 1));
 
   switch(operatorType) {
     case TOKEN_PLUS:          emitByte(OP_ADD); break;
