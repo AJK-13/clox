@@ -88,21 +88,26 @@ static InterpretResult run() {
   #undef BINARY_OP
 }
 
+// InterpretResult interpret(const char* source) {
+//   Chunk chunk;
+//   initChunk(&chunk);
+
+//   if (!compile(source, &chunk)) {
+//     freeChunk(&chunk);
+//     return INTERPRET_COMPILE_ERROR;
+//   }
+
+//   vm.chunk = &chunk;
+//   vm.ip = vm.chunk->code; 
+//   // ^-- vm.ip always points to the next instruction that hasn't been read       yet, not the current one.
+
+//   InterpretResult result = run();
+
+//   freeChunk(&chunk);
+//   return result;
+// }
+
 InterpretResult interpret(const char* source) {
-  Chunk chunk;
-  initChunk(&chunk);
-
-  if (!compile(source, &chunk)) {
-    freeChunk(&chunk);
-    return INTERPRET_COMPILE_ERROR;
-  }
-
-  vm.chunk = &chunk;
-  vm.ip = vm.chunk->code; 
-  // ^-- vm.ip always points to the next instruction that hasn't been read       yet, not the current one.
-
-  InterpretResult result = run();
-
-  freeChunk(&chunk);
-  return result;
+  compile(source);
+  return INTERPRET_OK;
 }

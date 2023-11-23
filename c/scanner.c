@@ -71,6 +71,39 @@ static Token errorToken(const char* message) {
   return token;
 }
 
+bool blockCommentError = false;
+
+static void skipBlockComment() {
+  int depth = 1;
+  while (depth > 0) {
+    
+    if (isAtEnd()) {
+      blockCommentError = true;
+      return;
+    }
+    
+    if (peek() == '/' && peekNext() == '*') {
+      advance();
+      advance();
+      depth++;
+      continue;
+    }
+    
+    if (peek() == '*' && peekNext() == '/') {
+      advance();
+      advance();
+      depth--;
+      continue;
+    }
+
+    if (peek() == '\n') {
+      scanner.line++;
+    } 
+    
+    advance();
+  }
+}
+
 static void skipWhiteSpace() {
   for (;;) {
     char c = peek();
@@ -88,6 +121,9 @@ static void skipWhiteSpace() {
         if (peekNext() == '/') {
           // A comment goes to the end of the line.
           while (peek() != '\n' && !isAtEnd()) advance();
+        } else if (peekNext() == '*') {
+          advance();
+          skipBlockComment();
         } else {
           return;
         }
@@ -174,6 +210,12 @@ static Token string() {
 
 Token scanToken() {
   skipWhiteSpace();
+  
+  if (blockCommentError) { 
+    blockCommentError = false; 
+    return errorToken("Unterminated block comment."); 
+  
+  }
   scanner.start = scanner.current;
 
   if (isAtEnd()) {
